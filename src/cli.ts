@@ -22,8 +22,6 @@ interface ICommand extends _ICommand {
 ((cmd.version(require('../package.json').version) as ICommand)
 	.arguments('<url>')
 	.description('XSD download and conversion tool')
-	.option('-H, --force-host <host>', 'Fetch all xsd files from <host>\n    (original host is passed in GET parameter "host")')
-	.option('-P, --force-port <port>', 'Connect to <port> when using --force-host')
 	// .option('-c, --cache-xsd <path>', 'Cache downloaded XSD filed under <path>')
 	.option('-t, --out-ts <path>', 'Output TypeScript definitions under <path>')
 	.option('-j, --out-js <path>', 'Output JavaScript modules under <path>')
@@ -39,15 +37,8 @@ function handleConvert(urlRemote: string, opts: { [key: string]: any }) {
 
 	var fetchOptions: FetchOptions = {};
 
-	if(opts['forceHost']) {
-		fetchOptions.forceHost = opts['forceHost'];
-		if(opts['forcePort']) fetchOptions.forcePort = opts['forcePort'];
-
-		Cache.patchRequest();
-	}
-
-	var jsCache = new Cache(opts['outJs'] || 'xmlns', '_index.js');
-	var tsCache = new Cache(opts['outTs'] || 'xmlns', '_index.d.ts');
+	var jsCache = new Cache(opts['outJs'] || 'xmlns', {indexName: '_index.js'});
+	var tsCache = new Cache(opts['outTs'] || 'xmlns', {indexName: '_index.d.ts'});
 
 	var loader = new Loader(xsdContext, fetchOptions);
 
