@@ -55,10 +55,13 @@ export abstract class Exporter extends Transform<Exporter, boolean, State> {
 		}
 
         return(isCachedResult.then((isCached: boolean) => {
-			if(isCached) return(null)
+			if(isCached) return(null);
+
+			const outName_force = new Address(outName.match(/https?:\/\//) ? outName : path.join('/', outName));
+			outName_force.isLocal = false;
 
 			return(this.state.cache.store(
-				outName,
+				outName_force,
 				this.writeContents()
 			));
 		}));
