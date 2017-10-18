@@ -8,6 +8,7 @@ import {Address, Cache} from 'cget'
 
 import {Transform} from '../transform/Transform';
 import {Type} from '../Type';
+import { FileSystemCache } from 'cget/dist/strategy';
 
 export interface State {
 	cache: Cache;
@@ -40,13 +41,20 @@ export abstract class Exporter extends Transform<Exporter, boolean, State> {
 		var doc = this.doc;
 		if(!doc) return(null);
 
+		const fsCache: FileSystemCache = this.state.cache.storePipeline[0] as FileSystemCache;
+
 		this.cacheDir = path.dirname(
-			this.state.cache.getCachePathSync(new Address(doc.namespace.name))
+            fsCache.getCachePathSync(doc.namespace.name)
 		);
 
 		var outName = this.getOutName(doc.namespace.name);
 
-		return(this.state.cache.ifCached(outName).then((isCached: boolean) => {
+        let isCachedResult = fsCache.isCached(outName);
+        if(!isCachedResult) {
+        	return Promise.resolve(null);
+		}
+
+        return(isCachedResult.then((isCached: boolean) => {
 			if(isCached) return(null)
 
 			return(this.state.cache.store(
@@ -64,7 +72,8 @@ export abstract class Exporter extends Transform<Exporter, boolean, State> {
 		// Append and then strip a file extension so references to a parent
 		// directory will target the directory by name instead of .. or similar.
 
-		var targetPath = this.state.cache.getCachePathSync(new Address(name)) + '.js';
+        const fsCache: FileSystemCache = this.state.cache.storePipeline[0] as FileSystemCache;
+        var targetPath = fsCache.getCachePathSync(name) + '.js';
 
 		// Always output forward slashes.
 		// If path.sep is a backslash as on Windows, we need to escape it (as a double-backslash) for it to be a valid Regex.
