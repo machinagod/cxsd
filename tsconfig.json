@@ -6,11 +6,15 @@
 		"moduleResolution": "node",
 		"noImplicitAny": true,
 		"outDir": "dist",
+		"lib": ["es6"],
 		"target": "es5"
 	},
 	"files": [
 		"typings-custom/node-expat.d.ts",
 
 		"src/cli.ts"
+	],
+	"typeRoots": [
+		"node_modules/@types"
 	]
 }

@@ -30,7 +30,7 @@
   ],
   "dependencies": {
     "bluebird": "^3.4.1",
-    "cget": "~0.0.5",
+    "cget": "~0.2.1",
     "commander": "~2.9.0",
     "cxml": "~0.1.0",
     "node-expat": "~2.3.15"
@@ -40,6 +40,6 @@
     "@types/commander": "^2.11.0",
     "@types/node": "^8.0.45",
     "@types/request": "^2.0.6",
-    "typescript": "^2.4.2"
+    "typescript": "~2.4.2"
   }
 }
