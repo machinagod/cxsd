@@ -1,8 +1,8 @@
 // This file is part of cxsd, copyright (c) 2015-2016 BusFaster Ltd.
 // Released under the MIT license, see LICENSE.
 
-import {State} from '../State';
-import {QName} from '../QName';
+import { QName } from '../QName';
+import { State } from '../State';
 import * as types from '../types';
 
 /** <xsd:complextype> */
@@ -19,6 +19,13 @@ export class ComplexType extends types.TypeBase {
 		types.AttributeGroup,
 		types.Group
 	];
+
+	resolve(state: State) {
+        if (state.attributeTbl['mixed'] === 'true') {
+            const base = new QName('xs:string', state.source);
+            (state.xsdElement as (types.TypeBase)).parent = this.scope.lookup(base, 'type') as types.Primitive;
+        }
+    }
 }
 
 export class ContentBase extends types.Base {
