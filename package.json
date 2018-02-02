@@ -8,7 +8,8 @@
   "scripts": {
     "tsc": "tsc",
     "prepublish": "tsc",
-    "test": "node cxsd-cli.js --help"
+    "test": "node cxsd-cli.js --help",
+    "debug": "ts-node $NODE_DEBUG_OPTION src/cli.ts -t local_test local_test/test.xsd"
   },
   "author": "Juha Järvi",
   "license": "MIT",
@@ -32,7 +33,7 @@
     "bluebird": "^3.4.1",
     "cget": "~0.2.1",
     "commander": "~2.9.0",
-    "cxml": "~0.1.0",
+    "cxml": "~0.1.1",
     "node-expat": "~2.3.15"
   },
   "devDependencies": {
@@ -40,6 +41,8 @@
     "@types/commander": "^2.11.0",
     "@types/node": "^8.0.45",
     "@types/request": "^2.0.6",
+    "source-map-support": "^0.5.3",
+    "ts-node": "^4.1.0",
     "typescript": "~2.4.2"
   }
 }
