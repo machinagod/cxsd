@@ -1,7 +1,7 @@
 // This file is part of cxsd, copyright (c) 2015-2016 BusFaster Ltd.
 // Released under the MIT license, see LICENSE.
 
-import * as cmd from 'commander';
+import { Command } from 'commander';
 
 import {Cache, FetchOptions} from 'cget';
 import * as cxml from 'cxml';
@@ -14,12 +14,9 @@ import * as schema from './schema';
 import {AddImports} from './schema/transform/AddImports';
 import {Sanitize} from './schema/transform/Sanitize';
 
-type _ICommand = typeof cmd;
-interface ICommand extends _ICommand {
-	arguments(spec: string): ICommand;
-}
+const cmd = new Command();
 
-((cmd.version(require('../package.json').version) as ICommand)
+((cmd.version(require('../package.json').version))
 	.arguments('<url>')
 	.description('XSD download and conversion tool')
 	// .option('-c, --cache-xsd <path>', 'Cache downloaded XSD filed under <path>')
