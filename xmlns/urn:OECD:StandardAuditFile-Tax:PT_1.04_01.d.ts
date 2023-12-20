@@ -32,10 +32,10 @@ interface _AuditFileType extends BaseType {
 interface AuditFileType extends _AuditFileType { constructor: { new(): AuditFileType }; }
 
 interface _AuditFileTypeMasterFilesType extends BaseType {
-	Customer?: CustomerType;
+	Customer?: CustomerType[];
 	GeneralLedgerAccounts?: GeneralLedgerAccountsType;
-	Product?: ProductType;
-	Supplier?: SupplierType;
+	Product?: ProductType[];
+	Supplier?: SupplierType[];
 	TaxTable?: TaxTableType;
 }
 interface AuditFileTypeMasterFilesType extends _AuditFileTypeMasterFilesType { constructor: { new(): AuditFileTypeMasterFilesType }; }
@@ -91,21 +91,21 @@ interface _CustomerType extends BaseType {
 	Email?: string;
 	Fax?: string;
 	SelfBillingIndicator: number;
-	ShipToAddress?: CustomerAddressStructure;
+	ShipToAddress?: CustomerAddressStructure[];
 	Telephone?: string;
 	Website?: string;
 }
 interface CustomerType extends _CustomerType { constructor: { new(): CustomerType }; }
 
 interface _CustomsDetails extends BaseType {
-	CNCode?: string;
-	UNNumber?: string;
+	CNCode?: string[];
+	UNNumber?: string[];
 }
 export interface CustomsDetails extends _CustomsDetails { constructor: { new(): CustomsDetails }; }
 export var CustomsDetails: { new(): CustomsDetails };
 
 interface _CustomsInformation extends BaseType {
-	ARCNo?: string;
+	ARCNo?: string[];
 	IECAmount?: number;
 }
 export interface CustomsInformation extends _CustomsInformation { constructor: { new(): CustomsInformation }; }
@@ -121,7 +121,11 @@ type FiscalYearType = number;
 type _FiscalYearType = Primitive._number;
 
 interface _GeneralLedgerAccountsType extends BaseType {
-	Account: GeneralLedgerAccountsTypeAccountType;
+	Account: GeneralLedgerAccountsTypeAccountType[];
+	/** S para SNC base (Taxonomia S), M para SNC microentidades (Taxonomia
+	  * M), N para Normas Internacionais de Contabilidade (Taxonomia S), O para outros
+	  * referenciais contabilisticos cuja taxonomia nao se encontra
+	  * codificada */
 	TaxonomyReference: TaxonomyReferenceType;
 }
 interface GeneralLedgerAccountsType extends _GeneralLedgerAccountsType { constructor: { new(): GeneralLedgerAccountsType }; }
@@ -131,6 +135,11 @@ interface _GeneralLedgerAccountsTypeAccountType extends BaseType {
 	AccountID: string;
 	ClosingCreditBalance: number;
 	ClosingDebitBalance: number;
+	/** GR para conta de 1. grau da contabilidade geral, GA para conta
+	  * agregadora ou integradora da contabilidade geral, GM para conta de movimento da
+	  * contabilidade geral, AR para conta de 1. grau da contabilidade analitica, AA para
+	  * conta agregadora ou integradora da contabilidade analitica, AM para conta de
+	  * movimento da contabilidade analitica */
 	GroupingCategory: GroupingCategoryType;
 	GroupingCode?: string;
 	OpeningCreditBalance: number;
@@ -140,7 +149,7 @@ interface _GeneralLedgerAccountsTypeAccountType extends BaseType {
 interface GeneralLedgerAccountsTypeAccountType extends _GeneralLedgerAccountsTypeAccountType { constructor: { new(): GeneralLedgerAccountsTypeAccountType }; }
 
 interface _GeneralLedgerEntriesType extends BaseType {
-	Journal?: GeneralLedgerEntriesTypeJournalType;
+	Journal?: GeneralLedgerEntriesTypeJournalType[];
 	NumberOfEntries: number;
 	TotalCredit: number;
 	TotalDebit: number;
@@ -150,7 +159,7 @@ interface GeneralLedgerEntriesType extends _GeneralLedgerEntriesType { construct
 interface _GeneralLedgerEntriesTypeJournalType extends BaseType {
 	Description: string;
 	JournalID: string;
-	Transaction?: GeneralLedgerEntriesTypeJournalTypeTransactionType;
+	Transaction?: GeneralLedgerEntriesTypeJournalTypeTransactionType[];
 }
 interface GeneralLedgerEntriesTypeJournalType extends _GeneralLedgerEntriesTypeJournalType { constructor: { new(): GeneralLedgerEntriesTypeJournalType }; }
 
@@ -165,6 +174,8 @@ interface _GeneralLedgerEntriesTypeJournalTypeTransactionType extends BaseType {
 	SupplierID?: string;
 	TransactionDate: Date;
 	TransactionID: string;
+	/** Restricao: N para Normal, R para Regularizacoes do periodo de
+	  * tributacao, A para Apuramento de resultados, J para Movimentos de ajustamento */
 	TransactionType: TransactionTypeType;
 }
 interface GeneralLedgerEntriesTypeJournalTypeTransactionType extends _GeneralLedgerEntriesTypeJournalTypeTransactionType { constructor: { new(): GeneralLedgerEntriesTypeJournalTypeTransactionType }; }
@@ -179,6 +190,9 @@ interface _HeaderType extends BaseType {
 	AuditFileVersion: string;
 	BusinessName?: string;
 	CompanyAddress: AddressStructure;
+	/** Concatenacao da Conservatoria do Registo Comercial com o numero do
+	  * registo comercial separados pelo caracter espaco. Nos casos em que nao existe o
+	  * registo comercial, deve ser indicado o NIF. */
 	CompanyID: string;
 	CompanyName: string;
 	CurrencyCode: CurrencyPT;
@@ -193,6 +207,11 @@ interface _HeaderType extends BaseType {
 	ProductVersion: string;
 	SoftwareCertificateNumber: number;
 	StartDate: Date;
+	/** C para Contabilidade, E para Faturacao emitida por terceiros, F para
+	  * Faturacao, I para Contabilidade integrada com a faturacao, P para Faturacao parcial,
+	  * R para Recibos (a), S para Autofaturacao, T para Documentos de transporte (a). (a)
+	  * Deve ser indicado este tipo, se o programa apenas este emitir este tipo de
+	  * documento. Caso contrario, devera ser utilizado o tipo C, F ou I */
 	TaxAccountingBasis: TaxAccountingBasisType;
 	TaxEntity: string;
 	TaxRegistrationNumber: number;
@@ -238,6 +257,15 @@ interface _PaymentMechanismType extends Primitive._string { content: PaymentMech
 interface _PaymentMethod extends BaseType {
 	PaymentAmount: number;
 	PaymentDate: Date;
+	/** Restricao:CC para Cartao credito, CD para Cartao debito, CH para
+	  * Cheque bancario, CI para credito documentario internacional, CO para Cheque ou
+	  * cartao oferta, CS para Compensacao de saldos em conta corrente, DE para Dinheiro
+	  * eletronico, por exemplo em cartoes de fidelidade ou de pontos, LC para Letra
+	  * comercial, MB para Referencias de pagamento para Multibanco, NU para Numerario, OU
+	  * para Outros meios aqui nao assinalados, PR para Permuta de bens, TB para
+	  * Transferencia bancaria ou debito direto autorizado, TR para titulos de compensacao
+	  * extrassalarial independentemente do seu suporte, por exemplo, titulos de refeicao,
+	  * educacao, etc. */
 	PaymentMechanism?: PaymentMechanismType;
 }
 export interface PaymentMethod extends _PaymentMethod { constructor: { new(): PaymentMethod }; }
@@ -266,7 +294,7 @@ type PeriodType = number;
 type _PeriodType = Primitive._number;
 
 interface _ProductSerialNumber extends BaseType {
-	SerialNumber: string;
+	SerialNumber: string[];
 }
 export interface ProductSerialNumber extends _ProductSerialNumber { constructor: { new(): ProductSerialNumber }; }
 export var ProductSerialNumber: { new(): ProductSerialNumber };
@@ -277,6 +305,11 @@ interface _ProductType extends BaseType {
 	ProductDescription: string;
 	ProductGroup?: string;
 	ProductNumberCode: string;
+	/** Restricao: P para Produtos, S para Servicos, O para Outros (Ex: portes
+	  * debitados, adiantamentos recebidos ou alienacao de ativos), E para Impostos
+	  * Especiais de Consumo (ex.:IABA, ISP, IT); I para impostos, taxas e encargos
+	  * parafiscais exceto IVA e IS que deverao ser refletidos na tabela 2.5 Tabela de
+	  * impostos (TaxTable)e Impostos Especiais de Consumo */
 	ProductType: ProductTypeType;
 }
 interface ProductType extends _ProductType { constructor: { new(): ProductType }; }
@@ -399,12 +432,21 @@ type _SAFTPTMovementTaxCode = Primitive._string;
 export type SAFTPTMovementTaxType = ("IVA" | "NS");
 interface _SAFTPTMovementTaxType extends Primitive._string { content: SAFTPTMovementTaxType; }
 
+/** Restricao: RC para Recibo emitido no ambito do regime de IVA de Caixa
+  * (incluindo os relativos a adiantamentos desse regime), RG para Outros recibos
+  * emitidos */
 export type SAFTPTPaymentType = ("RC" | "RG");
 interface _SAFTPTPaymentType extends Primitive._string { content: SAFTPTPaymentType; }
 
+/** P para documento produzido na aplicacao, I para documento integrado e
+  * produzido noutra aplicacao, M para documento proveniente de recuperacao ou de
+  * emissao manual */
 export type SAFTPTSourceBilling = ("P" | "I" | "M");
 interface _SAFTPTSourceBilling extends Primitive._string { content: SAFTPTSourceBilling; }
 
+/** P para documento produzido na aplicacao, I para documento integrado e
+  * produzido noutra aplicacao, M para documento proveniente de recuperacao ou de
+  * emissao manual */
 export type SAFTPTSourcePayment = ("P" | "I" | "M");
 interface _SAFTPTSourcePayment extends Primitive._string { content: SAFTPTSourcePayment; }
 
@@ -423,9 +465,9 @@ export var Settlement: { new(): Settlement };
 interface _ShippingPointStructure extends BaseType {
 	Address?: CustomerAddressStructure;
 	DeliveryDate?: Date;
-	DeliveryID?: string;
-	LocationID?: string;
-	WarehouseID?: string;
+	DeliveryID?: string[];
+	LocationID?: string[];
+	WarehouseID?: string[];
 }
 export interface ShippingPointStructure extends _ShippingPointStructure { constructor: { new(): ShippingPointStructure }; }
 export var ShippingPointStructure: { new(): ShippingPointStructure };
@@ -440,7 +482,7 @@ interface SourceDocumentsType extends _SourceDocumentsType { constructor: { new(
 
 interface _SourceDocumentsTypeMovementOfGoodsType extends BaseType {
 	NumberOfMovementLines: number;
-	StockMovement?: SourceDocumentsTypeMovementOfGoodsTypeStockMovementType;
+	StockMovement?: SourceDocumentsTypeMovementOfGoodsTypeStockMovementType[];
 	TotalQuantityIssued: number;
 }
 interface SourceDocumentsTypeMovementOfGoodsType extends _SourceDocumentsTypeMovementOfGoodsType { constructor: { new(): SourceDocumentsTypeMovementOfGoodsType }; }
@@ -455,11 +497,14 @@ interface _SourceDocumentsTypeMovementOfGoodsTypeStockMovementType extends BaseT
 	EACCode?: string;
 	Hash: string;
 	HashControl: string;
-	Line: SourceDocumentsTypeMovementOfGoodsTypeStockMovementTypeLineType;
+	Line: SourceDocumentsTypeMovementOfGoodsTypeStockMovementTypeLineType[];
 	MovementComments?: string;
 	MovementDate: Date;
 	MovementEndTime?: Date;
 	MovementStartTime: Date;
+	/** Restricao: Tipos de Documento (GR para Guia de remessa, GT para Guia
+	  * de transporte incluindo as globais, GA para Guia de movimentacao de ativos fixos
+	  * proprios, GC para Guia de consignacao, GD para Guia ou nota de devolucao */
 	MovementType: MovementTypeType;
 	Period?: number;
 	ShipFrom?: ShippingPointStructure;
@@ -472,6 +517,11 @@ interface _SourceDocumentsTypeMovementOfGoodsTypeStockMovementType extends BaseT
 interface SourceDocumentsTypeMovementOfGoodsTypeStockMovementType extends _SourceDocumentsTypeMovementOfGoodsTypeStockMovementType { constructor: { new(): SourceDocumentsTypeMovementOfGoodsTypeStockMovementType }; }
 
 interface _SourceDocumentsTypeMovementOfGoodsTypeStockMovementTypeDocumentStatusType extends BaseType {
+	/** N para Normal, T para Por conta de terceiros, A para Documento
+	  * anulado, F para Documento faturado, quando para este documento tambem existe na
+	  * tabela 4.1. para Documentos comerciais a clientes (SalesInvoices) o correspondente
+	  * do tipo fatura ou fatura simplificada, R para Documento de resumo doutros documentos
+	  * criados noutras aplicacoes e gerado nesta aplicacao */
 	MovementStatus: MovementStatusType;
 	MovementStatusDate: Date;
 	Reason?: string;
@@ -494,7 +544,7 @@ interface _SourceDocumentsTypeMovementOfGoodsTypeStockMovementTypeLineType exten
 	DebitAmount: number;
 	Description: string;
 	LineNumber: number;
-	OrderReferences?: OrderReferences;
+	OrderReferences?: OrderReferences[];
 	ProductCode: string;
 	ProductDescription: string;
 	ProductSerialNumber?: ProductSerialNumber;
@@ -510,7 +560,7 @@ interface SourceDocumentsTypeMovementOfGoodsTypeStockMovementTypeLineType extend
 
 interface _SourceDocumentsTypePaymentsType extends BaseType {
 	NumberOfEntries: number;
-	Payment?: SourceDocumentsTypePaymentsTypePaymentType;
+	Payment?: SourceDocumentsTypePaymentsTypePaymentType[];
 	TotalCredit: number;
 	TotalDebit: number;
 }
@@ -522,8 +572,8 @@ interface _SourceDocumentsTypePaymentsTypePaymentType extends BaseType {
 	Description?: string;
 	DocumentStatus: SourceDocumentsTypePaymentsTypePaymentTypeDocumentStatusType;
 	DocumentTotals: SourceDocumentsTypePaymentsTypePaymentTypeDocumentTotalsType;
-	Line: SourceDocumentsTypePaymentsTypePaymentTypeLineType;
-	PaymentMethod?: PaymentMethod;
+	Line: SourceDocumentsTypePaymentsTypePaymentTypeLineType[];
+	PaymentMethod?: PaymentMethod[];
 	PaymentRefNo: string;
 	PaymentType: SAFTPTPaymentType;
 	Period?: number;
@@ -532,11 +582,12 @@ interface _SourceDocumentsTypePaymentsTypePaymentType extends BaseType {
 	SystemID?: string;
 	TransactionDate: Date;
 	TransactionID?: string;
-	WithholdingTax?: WithholdingTax;
+	WithholdingTax?: WithholdingTax[];
 }
 interface SourceDocumentsTypePaymentsTypePaymentType extends _SourceDocumentsTypePaymentsTypePaymentType { constructor: { new(): SourceDocumentsTypePaymentsTypePaymentType }; }
 
 interface _SourceDocumentsTypePaymentsTypePaymentTypeDocumentStatusType extends BaseType {
+	/** N para normal, A para Anulado */
 	PaymentStatus: PaymentStatusType;
 	PaymentStatusDate: Date;
 	Reason?: string;
@@ -564,7 +615,7 @@ interface _SourceDocumentsTypePaymentsTypePaymentTypeLineType extends BaseType {
 	DebitAmount: number;
 	LineNumber: number;
 	SettlementAmount?: number;
-	SourceDocumentID: SourceDocumentsTypePaymentsTypePaymentTypeLineTypeSourceDocumentIDType;
+	SourceDocumentID: SourceDocumentsTypePaymentsTypePaymentTypeLineTypeSourceDocumentIDType[];
 	Tax?: PaymentTax;
 	TaxExemptionCode?: string;
 	TaxExemptionReason?: string;
@@ -579,7 +630,7 @@ interface _SourceDocumentsTypePaymentsTypePaymentTypeLineTypeSourceDocumentIDTyp
 interface SourceDocumentsTypePaymentsTypePaymentTypeLineTypeSourceDocumentIDType extends _SourceDocumentsTypePaymentsTypePaymentTypeLineTypeSourceDocumentIDType { constructor: { new(): SourceDocumentsTypePaymentsTypePaymentTypeLineTypeSourceDocumentIDType }; }
 
 interface _SourceDocumentsTypeSalesInvoicesType extends BaseType {
-	Invoice?: SourceDocumentsTypeSalesInvoicesTypeInvoiceType;
+	Invoice?: SourceDocumentsTypeSalesInvoicesTypeInvoiceType[];
 	NumberOfEntries: number;
 	TotalCredit: number;
 	TotalDebit: number;
@@ -596,8 +647,17 @@ interface _SourceDocumentsTypeSalesInvoicesTypeInvoiceType extends BaseType {
 	HashControl: string;
 	InvoiceDate: Date;
 	InvoiceNo: string;
+	/** Restricao:FT para Fatura, emitida nos termos do artigo 36. do Codigo
+	  * do IVA, FS para Fatura simplificada, emitida nos termos do artigo 40. do Codigo do
+	  * IVA, FR para Fatura-recibo, ND para Nota de debito, NC para Nota de credito, VD para
+	  * Venda a dinheiro e factura/recibo (a), TV para Talao de venda (a), TD para Talao de
+	  * devolucao (a), AA para Alienacao de ativos (a), DA para Devolucao de ativos (a).
+	  * Para o setor Segurador, ainda pode ser preenchido com: RP para Premio ou recibo de
+	  * premio, RE para Estorno ou recibo de estorno, CS para Imputacao a co-seguradoras, LD
+	  * para Imputacao a co-seguradora lider, RA para Resseguro aceite. (a) Para os dados
+	  * ate 2012-12-31 */
 	InvoiceType: InvoiceTypeType;
-	Line: SourceDocumentsTypeSalesInvoicesTypeInvoiceTypeLineType;
+	Line: SourceDocumentsTypeSalesInvoicesTypeInvoiceTypeLineType[];
 	MovementEndTime?: Date;
 	MovementStartTime?: Date;
 	Period?: number;
@@ -607,11 +667,14 @@ interface _SourceDocumentsTypeSalesInvoicesTypeInvoiceType extends BaseType {
 	SpecialRegimes: SpecialRegimes;
 	SystemEntryDate: Date;
 	TransactionID?: string;
-	WithholdingTax?: WithholdingTax;
+	WithholdingTax?: WithholdingTax[];
 }
 interface SourceDocumentsTypeSalesInvoicesTypeInvoiceType extends _SourceDocumentsTypeSalesInvoicesTypeInvoiceType { constructor: { new(): SourceDocumentsTypeSalesInvoicesTypeInvoiceType }; }
 
 interface _SourceDocumentsTypeSalesInvoicesTypeInvoiceTypeDocumentStatusType extends BaseType {
+	/** N para Normal, S para Autofaturacao, A para Documento anulado, R para
+	  * Documento de resumo doutros documentos criados noutras aplicacoes e gerado nesta
+	  * aplicacao, F para Documento faturado */
 	InvoiceStatus: InvoiceStatusType;
 	InvoiceStatusDate: Date;
 	Reason?: string;
@@ -624,8 +687,8 @@ interface _SourceDocumentsTypeSalesInvoicesTypeInvoiceTypeDocumentTotalsType ext
 	Currency?: Currency;
 	GrossTotal: number;
 	NetTotal: number;
-	Payment?: PaymentMethod;
-	Settlement?: Settlement;
+	Payment?: PaymentMethod[];
+	Settlement?: Settlement[];
 	TaxPayable: number;
 }
 interface SourceDocumentsTypeSalesInvoicesTypeInvoiceTypeDocumentTotalsType extends _SourceDocumentsTypeSalesInvoicesTypeInvoiceTypeDocumentTotalsType { constructor: { new(): SourceDocumentsTypeSalesInvoicesTypeInvoiceTypeDocumentTotalsType }; }
@@ -636,12 +699,12 @@ interface _SourceDocumentsTypeSalesInvoicesTypeInvoiceTypeLineType extends BaseT
 	DebitAmount: number;
 	Description: string;
 	LineNumber: number;
-	OrderReferences?: OrderReferences;
+	OrderReferences?: OrderReferences[];
 	ProductCode: string;
 	ProductDescription: string;
 	ProductSerialNumber?: ProductSerialNumber;
 	Quantity: number;
-	References?: References;
+	References?: References[];
 	SettlementAmount?: number;
 	Tax: Tax;
 	TaxBase?: number;
@@ -657,7 +720,7 @@ interface _SourceDocumentsTypeWorkingDocumentsType extends BaseType {
 	NumberOfEntries: number;
 	TotalCredit: number;
 	TotalDebit: number;
-	WorkDocument?: SourceDocumentsTypeWorkingDocumentsTypeWorkDocumentType;
+	WorkDocument?: SourceDocumentsTypeWorkingDocumentsTypeWorkDocumentType[];
 }
 interface SourceDocumentsTypeWorkingDocumentsType extends _SourceDocumentsTypeWorkingDocumentsType { constructor: { new(): SourceDocumentsTypeWorkingDocumentsType }; }
 
@@ -670,12 +733,24 @@ interface _SourceDocumentsTypeWorkingDocumentsTypeWorkDocumentType extends BaseT
 	EACCode?: string;
 	Hash: string;
 	HashControl: string;
-	Line: SourceDocumentsTypeWorkingDocumentsTypeWorkDocumentTypeLineType;
+	Line: SourceDocumentsTypeWorkingDocumentsTypeWorkDocumentTypeLineType[];
 	Period?: number;
 	SourceID: string;
 	SystemEntryDate: Date;
 	TransactionID?: string;
 	WorkDate: Date;
+	/** Restricao: DC para documentos emitidos ate 2017-06-30, CM para
+	  * consulta de mesa, CC para credito de consignacao, FC para fatura de consignacao nos
+	  * termos do art.38 do CIVA, FO para folha de obra, NE para nota de encomenda, OU para
+	  * outros documentos suscetiveis de apresentacao ao cliente para conferencia de
+	  * mercadorias ou de prestacao de servicos que nao se encontrem aqui devidamente
+	  * identificados (ou seus equivalentes), OR para orcamento, PF para fatura pro-forma.
+	  * Para o setor Segurador quando para os tipos de documentos a seguir identificados
+	  * tambem deva existir na tabela 4.1 - Documentos comerciais a clientes (SalesInvoices)
+	  * a correspondente fatura ou documento rectificativo de fatura, ainda pode ser
+	  * preenchido com RP para premio ou recibo de premio, RE para estorno ou recibo de
+	  * estorno, CS para imputacao a co-seguradoras, LD para imputacao a co-seguradora
+	  * lider, RA para resseguro aceite. */
 	WorkType: WorkTypeType;
 }
 interface SourceDocumentsTypeWorkingDocumentsTypeWorkDocumentType extends _SourceDocumentsTypeWorkingDocumentsTypeWorkDocumentType { constructor: { new(): SourceDocumentsTypeWorkingDocumentsTypeWorkDocumentType }; }
@@ -684,6 +759,9 @@ interface _SourceDocumentsTypeWorkingDocumentsTypeWorkDocumentTypeDocumentStatus
 	Reason?: string;
 	SourceBilling: SAFTPTSourceBilling;
 	SourceID: string;
+	/** N para Normal, A para Anulado, F para faturado (quando para este
+	  * documento tambem existe na tabela 4.1. o correspondente do tipo fatura ou fatura
+	  * simplificada) */
 	WorkStatus: WorkStatusType;
 	WorkStatusDate: Date;
 }
@@ -703,12 +781,12 @@ interface _SourceDocumentsTypeWorkingDocumentsTypeWorkDocumentTypeLineType exten
 	DebitAmount: number;
 	Description: string;
 	LineNumber: number;
-	OrderReferences?: OrderReferences;
+	OrderReferences?: OrderReferences[];
 	ProductCode: string;
 	ProductDescription: string;
 	ProductSerialNumber?: ProductSerialNumber;
 	Quantity: number;
-	References?: References;
+	References?: References[];
 	SettlementAmount?: number;
 	Tax?: Tax;
 	TaxBase?: number;
@@ -736,7 +814,7 @@ interface _SupplierType extends BaseType {
 	Email?: string;
 	Fax?: string;
 	SelfBillingIndicator: number;
-	ShipFromAddress?: AddressStructure;
+	ShipFromAddress?: AddressStructure[];
 	SupplierID: string;
 	SupplierTaxID: string;
 	Telephone?: string;
@@ -781,7 +859,7 @@ interface _TaxTableEntryType extends BaseType {
 interface TaxTableEntryType extends _TaxTableEntryType { constructor: { new(): TaxTableEntryType }; }
 
 interface _TaxTableType extends BaseType {
-	TaxTableEntry: TaxTableEntryType;
+	TaxTableEntry: TaxTableEntryType[];
 }
 interface TaxTableType extends _TaxTableType { constructor: { new(): TaxTableType }; }
 
@@ -797,6 +875,8 @@ interface _TransactionTypeType extends Primitive._string { content: TransactionT
 interface _WithholdingTax extends BaseType {
 	WithholdingTaxAmount: number;
 	WithholdingTaxDescription?: string;
+	/** Restricao: IRS para Imposto Sobre o Rendimento das Pessoas Singulares,
+	  * IRC para Imposto Sobre o Rendimento das Pessoas colectivas, IS para Imposto do selo */
 	WithholdingTaxType?: WithholdingTaxTypeType;
 }
 export interface WithholdingTax extends _WithholdingTax { constructor: { new(): WithholdingTax }; }
@@ -830,6 +910,9 @@ export interface document extends BaseType {
 	ClosingDebitBalance: number;
 	CNCode: string;
 	CompanyAddress: AddressStructure;
+	/** Concatenacao da Conservatoria do Registo Comercial com o numero do
+	  * registo comercial separados pelo caracter espaco. Nos casos em que nao existe o
+	  * registo comercial, deve ser indicado o NIF. */
 	CompanyID: string;
 	CompanyName: string;
 	Contact: string;
@@ -857,6 +940,11 @@ export interface document extends BaseType {
 	GeneralLedgerEntries: GeneralLedgerEntriesType;
 	GLPostingDate: Date;
 	GrossTotal: number;
+	/** GR para conta de 1. grau da contabilidade geral, GA para conta
+	  * agregadora ou integradora da contabilidade geral, GM para conta de movimento da
+	  * contabilidade geral, AR para conta de 1. grau da contabilidade analitica, AA para
+	  * conta agregadora ou integradora da contabilidade analitica, AM para conta de
+	  * movimento da contabilidade analitica */
 	GroupingCategory: GroupingCategoryType;
 	Hash: string;
 	HashControl: string;
@@ -865,8 +953,20 @@ export interface document extends BaseType {
 	IECAmount: number;
 	InvoiceDate: Date;
 	InvoiceNo: string;
+	/** N para Normal, S para Autofaturacao, A para Documento anulado, R para
+	  * Documento de resumo doutros documentos criados noutras aplicacoes e gerado nesta
+	  * aplicacao, F para Documento faturado */
 	InvoiceStatus: InvoiceStatusType;
 	InvoiceStatusDate: Date;
+	/** Restricao:FT para Fatura, emitida nos termos do artigo 36. do Codigo
+	  * do IVA, FS para Fatura simplificada, emitida nos termos do artigo 40. do Codigo do
+	  * IVA, FR para Fatura-recibo, ND para Nota de debito, NC para Nota de credito, VD para
+	  * Venda a dinheiro e factura/recibo (a), TV para Talao de venda (a), TD para Talao de
+	  * devolucao (a), AA para Alienacao de ativos (a), DA para Devolucao de ativos (a).
+	  * Para o setor Segurador, ainda pode ser preenchido com: RP para Premio ou recibo de
+	  * premio, RE para Estorno ou recibo de estorno, CS para Imputacao a co-seguradoras, LD
+	  * para Imputacao a co-seguradora lider, RA para Resseguro aceite. (a) Para os dados
+	  * ate 2012-12-31 */
 	InvoiceType: InvoiceTypeType;
 	JournalID: string;
 	LineNumber: number;
@@ -875,8 +975,16 @@ export interface document extends BaseType {
 	MovementDate: Date;
 	MovementEndTime: Date;
 	MovementStartTime: Date;
+	/** N para Normal, T para Por conta de terceiros, A para Documento
+	  * anulado, F para Documento faturado, quando para este documento tambem existe na
+	  * tabela 4.1. para Documentos comerciais a clientes (SalesInvoices) o correspondente
+	  * do tipo fatura ou fatura simplificada, R para Documento de resumo doutros documentos
+	  * criados noutras aplicacoes e gerado nesta aplicacao */
 	MovementStatus: MovementStatusType;
 	MovementStatusDate: Date;
+	/** Restricao: Tipos de Documento (GR para Guia de remessa, GT para Guia
+	  * de transporte incluindo as globais, GA para Guia de movimentacao de ativos fixos
+	  * proprios, GC para Guia de consignacao, GD para Guia ou nota de devolucao */
 	MovementType: MovementTypeType;
 	NetTotal: number;
 	NumberOfEntries: number;
@@ -885,8 +993,18 @@ export interface document extends BaseType {
 	OpeningDebitBalance: number;
 	OrderDate: Date;
 	OriginatingON: string;
+	/** Restricao:CC para Cartao credito, CD para Cartao debito, CH para
+	  * Cheque bancario, CI para credito documentario internacional, CO para Cheque ou
+	  * cartao oferta, CS para Compensacao de saldos em conta corrente, DE para Dinheiro
+	  * eletronico, por exemplo em cartoes de fidelidade ou de pontos, LC para Letra
+	  * comercial, MB para Referencias de pagamento para Multibanco, NU para Numerario, OU
+	  * para Outros meios aqui nao assinalados, PR para Permuta de bens, TB para
+	  * Transferencia bancaria ou debito direto autorizado, TR para titulos de compensacao
+	  * extrassalarial independentemente do seu suporte, por exemplo, titulos de refeicao,
+	  * educacao, etc. */
 	PaymentMechanism: PaymentMechanismType;
 	PaymentRefNo: string;
+	/** N para normal, A para Anulado */
 	PaymentStatus: PaymentStatusType;
 	PaymentStatusDate: Date;
 	Period: number;
@@ -898,6 +1016,11 @@ export interface document extends BaseType {
 	ProductGroup: string;
 	ProductID: string;
 	ProductNumberCode: string;
+	/** Restricao: P para Produtos, S para Servicos, O para Outros (Ex: portes
+	  * debitados, adiantamentos recebidos ou alienacao de ativos), E para Impostos
+	  * Especiais de Consumo (ex.:IABA, ISP, IT); I para impostos, taxas e encargos
+	  * parafiscais exceto IVA e IS que deverao ser refletidos na tabela 2.5 Tabela de
+	  * impostos (TaxTable)e Impostos Especiais de Consumo */
 	ProductType: ProductTypeType;
 	ProductVersion: string;
 	Quantity: number;
@@ -923,6 +1046,11 @@ export interface document extends BaseType {
 	SupplierTaxID: string;
 	SystemEntryDate: Date;
 	SystemID: string;
+	/** C para Contabilidade, E para Faturacao emitida por terceiros, F para
+	  * Faturacao, I para Contabilidade integrada com a faturacao, P para Faturacao parcial,
+	  * R para Recibos (a), S para Autofaturacao, T para Documentos de transporte (a). (a)
+	  * Deve ser indicado este tipo, se o programa apenas este emitir este tipo de
+	  * documento. Caso contrario, devera ser utilizado o tipo C, F ou I */
 	TaxAccountingBasis: TaxAccountingBasisType;
 	TaxAmount: number;
 	TaxBase: number;
@@ -932,6 +1060,10 @@ export interface document extends BaseType {
 	TaxExemptionCode: string;
 	TaxExemptionReason: string;
 	TaxExpirationDate: Date;
+	/** S para SNC base (Taxonomia S), M para SNC microentidades (Taxonomia
+	  * M), N para Normas Internacionais de Contabilidade (Taxonomia S), O para outros
+	  * referenciais contabilisticos cuja taxonomia nao se encontra
+	  * codificada */
 	TaxonomyReference: TaxonomyReferenceType;
 	TaxPayable: number;
 	TaxPercentage: number;
@@ -947,16 +1079,35 @@ export interface document extends BaseType {
 	TotalQuantityIssued: number;
 	TransactionDate: Date;
 	TransactionID: string;
+	/** Restricao: N para Normal, R para Regularizacoes do periodo de
+	  * tributacao, A para Apuramento de resultados, J para Movimentos de ajustamento */
 	TransactionType: TransactionTypeType;
 	UnitOfMeasure: string;
 	UnitPrice: number;
 	UNNumber: string;
 	WarehouseID: string;
 	Website: string;
+	/** Restricao: IRS para Imposto Sobre o Rendimento das Pessoas Singulares,
+	  * IRC para Imposto Sobre o Rendimento das Pessoas colectivas, IS para Imposto do selo */
 	WithholdingTaxType: WithholdingTaxTypeType;
 	WorkDate: Date;
+	/** N para Normal, A para Anulado, F para faturado (quando para este
+	  * documento tambem existe na tabela 4.1. o correspondente do tipo fatura ou fatura
+	  * simplificada) */
 	WorkStatus: WorkStatusType;
 	WorkStatusDate: Date;
+	/** Restricao: DC para documentos emitidos ate 2017-06-30, CM para
+	  * consulta de mesa, CC para credito de consignacao, FC para fatura de consignacao nos
+	  * termos do art.38 do CIVA, FO para folha de obra, NE para nota de encomenda, OU para
+	  * outros documentos suscetiveis de apresentacao ao cliente para conferencia de
+	  * mercadorias ou de prestacao de servicos que nao se encontrem aqui devidamente
+	  * identificados (ou seus equivalentes), OR para orcamento, PF para fatura pro-forma.
+	  * Para o setor Segurador quando para os tipos de documentos a seguir identificados
+	  * tambem deva existir na tabela 4.1 - Documentos comerciais a clientes (SalesInvoices)
+	  * a correspondente fatura ou documento rectificativo de fatura, ainda pode ser
+	  * preenchido com RP para premio ou recibo de premio, RE para estorno ou recibo de
+	  * estorno, CS para imputacao a co-seguradoras, LD para imputacao a co-seguradora
+	  * lider, RA para resseguro aceite. */
 	WorkType: WorkTypeType;
 }
 export var document: document;
