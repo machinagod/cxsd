@@ -105,7 +105,7 @@ export class Parser {
 		var state = new State(null, this.rootRule, source);
 		var importList: {namespace: Namespace, url: string}[] = [];
 
-		var xml = new expat.Parser(null);
+		var xml = new expat.Parser('UTF-8');
 		// var xml = sax.createStream(true, { position: true });
 
 		state.stateStatic = {
@@ -148,6 +148,7 @@ export class Parser {
 			// var attrTbl = node.attributes;
 
 			try {
+				console.log('START ' + name + ' (' + JSON.stringify(attrTbl) + ') on line ' + xml.getCurrentLineNumber() + ' of ' + source.url);
 				state = this.startElement(state, name, attrTbl);
 			} catch(err) {
 				// Exceptions escaping from node-expat's event handlers cause weird effects.
